@@ -16,9 +16,9 @@ python main.py start --name "이름"
 메뉴 3번을 누르면 종료 됩니다.
 
 
-### 회고
+# 회고
 5/14
-# How to use
+## How to use
 ```
 python main.py
 ```

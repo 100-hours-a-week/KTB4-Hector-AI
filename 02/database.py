@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+
 #DB 접속 주소
-DATABASE_URL = "mysql+pymysql://root:hojune0701!@localhost:3306/community_app?charset=utf8mb4"
+DATABASE_URL = "mysql+pymysql://root:비밀번호입력@localhost:3306/community_app?charset=utf8mb4"
 #DB연결 객체 생성
+
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,

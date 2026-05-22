@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
 
-
+#user테이블 매핑
 class User(Base):
     __tablename__ = "users"
 

@@ -17,14 +17,14 @@ from schemas.post_schema import (
     PostListResponse,
 )
 
-
+#글 번호가 없으면 404에러
 def get_post_or_404(db: Session, post_id: int) -> Post:
     post = db.get(Post, post_id)
     if not post:
         raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다.")
     return post
 
-
+#글 작성
 def create_post(db: Session, payload: PostCreateRequest) -> PostDetailResponse:
     user = ensure_user_exists(db, payload.user_id)
 
@@ -47,7 +47,7 @@ def create_post(db: Session, payload: PostCreateRequest) -> PostDetailResponse:
         created_at=post.created_at,
     )
 
-
+#목록 조회
 def list_posts(
     db: Session,
     page: int,
@@ -72,7 +72,7 @@ def list_posts(
         query = query.filter(Post.title.ilike(f"%{keyword}%"))
 
     query = query.group_by(Post.id, Post.title, User.nickname, Post.view_count, Post.created_at)
-
+#좋아요순, 최신순, 조회수순
     if sort == "latest":
         query = query.order_by(Post.id.desc())
     elif sort == "likes":
@@ -103,7 +103,7 @@ def list_posts(
         has_next=(page * size) < total,
     )
 
-
+#글 상세 조회
 def get_post_detail(db: Session, post_id: int) -> PostDetailResponse:
     post = get_post_or_404(db, post_id)
     post.view_count += 1
@@ -123,7 +123,7 @@ def get_post_detail(db: Session, post_id: int) -> PostDetailResponse:
         created_at=post.created_at,
     )
 
-
+# 좋아요
 def toggle_like(db: Session, post_id: int, payload: LikeToggleRequest) -> LikeToggleResponse:
     get_post_or_404(db, post_id)
     ensure_user_exists(db, payload.user_id)

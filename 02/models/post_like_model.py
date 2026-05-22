@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
 
-
+#좋아요 테이블 매핑
 class PostLike(Base):
     __tablename__ = "post_likes"
 

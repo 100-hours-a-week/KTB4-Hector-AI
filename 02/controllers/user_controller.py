@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from models.user_model import User
 
-
+#해당 유저 없으면 자동 생성
 def ensure_user_exists(db: Session, user_id: int) -> User:
     user = db.get(User, user_id)
     if user:
@@ -15,7 +15,7 @@ def ensure_user_exists(db: Session, user_id: int) -> User:
     db.refresh(user)
     return user
 
-
+#닉네임 변경
 def set_nickname(db: Session, user_id: int, nickname: str) -> User:
     nickname = nickname.strip()
     if not nickname:

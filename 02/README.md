@@ -1,7 +1,7 @@
 ### 커뮤니티 서비스
 
 ## 구조
-$$
+```
 project/
 ├── main.py
 ├── database.py
@@ -25,5 +25,5 @@ project/
     ├── post_schema.py
     ├── comment_schema.py
     └── ai_schema.py
-$$
+```
 

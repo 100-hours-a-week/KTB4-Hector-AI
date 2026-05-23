@@ -42,7 +42,7 @@ project/
 ## Swagger
 * http://127.0.0.1:8000/docs
 
-## 공 응답
+## 성공 응답
 * 200 OK
 * 201 Created
 

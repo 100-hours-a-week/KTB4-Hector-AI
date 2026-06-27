@@ -19,6 +19,7 @@ uv run main.py
 | worldcup.md | 월드컵 내용 |
 
 ## 구조
+```
 07/
 ├── .venv/
 ├── myenv/
@@ -31,6 +32,6 @@ uv run main.py
 ├── main.py
 ├── pyproject.toml
 └── uv.lock
-
+```
 ### 회고
 강사님의 Langsmith 파일을 보고 따라했다. 문서는 어떤걸 할까 고민하다가 월드컵 관련 문서를 클로드한테 부탁하여 간단하게 3개 만들었다. 

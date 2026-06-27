@@ -33,5 +33,22 @@ uv run main.py
 ├── pyproject.toml
 └── uv.lock
 ```
+### baseline
+notes의 모든 .md 파일을 읽어 TextLoader로 로딩. RecursiveCharacterSplitter로 Chunk_size=500, overlap=50으로 쪼갬. 쪼갠 chunk들은 Gemini 임베딩으로 벡터화해서 Chroma 벡터 스토어에 저장
+## LCEL 파이프 구조
+```
+rag = (
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
+    | prompt | llm | StrOutputParser()
+)
+```
+입력 질문이 들어오면 retriever가 유사도 3개 chunk를 검색 -> RunnablePassthrough가 원본 질문을 그대로 question에 전달 -> 이 둘이 prompt에 들어가 llm이 답변 생성 -> StrOutputParser가 문자열 추출
+## 평가
+<img width="1677" height="235" alt="image" src="https://github.com/user-attachments/assets/2c66dbbc-3b8e-4e58-b887-193ba53e3cb5" />
+<img width="1672" height="311" alt="image" src="https://github.com/user-attachments/assets/8c4f17db-e9f0-4430-9936-0c19e4a45e58" />
+<img width="1677" height="308" alt="image" src="https://github.com/user-attachments/assets/4026f950-8305-4035-b148-785b00a0c0b0" />
+
 ### 회고
-강사님의 Langsmith 파일을 보고 따라했다. 문서는 어떤걸 할까 고민하다가 월드컵 관련 문서를 클로드한테 부탁하여 간단하게 3개 만들었다. 
+강사님의 Langsmith 파일을 보고 따라했다. 문서는 어떤걸 할까 고민하다가 월드컵 관련 문서를 클로드한테 부탁하여 간단하게 3개 만들었다.
+1. 데스크 탑에서 하는데 gemma 4가 멕북용이여서 오류가 났다. 이를 gemma3:e4b로 바꾸어 해결하였다.
+2. 

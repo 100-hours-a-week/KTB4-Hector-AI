@@ -1,6 +1,5 @@
 **구조**
-
-!image.png
+![alt text](image.png)
 
 ## 설계
 
@@ -54,12 +53,10 @@ tool로 search_law와 search_case을 추가
 tool condition을 통해 종료 여부를 판단
 
 **그래프 구조**
-
-!image.png
+![alt text](image-1.png)
 
 ## 결과
-
-!image.png
+![alt text](image-2.png)
 
 ## 7/9
 
@@ -96,5 +93,4 @@ summart_messages 노드 추가
 state에서 오래된 메시지 삭제 후 요약본으로 대체
 
 성능 확인 + 스트리밍 확인
-
-!image.png
+![alt text](image-3.png)

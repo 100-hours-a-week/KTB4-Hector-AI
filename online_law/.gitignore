@@ -5,3 +5,6 @@ chroma_persist_manifest.json
 __pycache__/
 *.pyc
 .DS_Store
+checkpoints.db
+checkpoints.db-shm
+checkpoints.db-wal

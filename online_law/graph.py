@@ -3,17 +3,19 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from typing_extensions import TypedDict
-
+import sqlite3
 from langchain_core.documents import Document
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, RemoveMessage
 from langchain_core.tools import tool
 from langchain_anthropic import ChatAnthropic
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_google_genai import ChatGoogleGenerativeAI
 from vectordb import build_vectorstore
+from langgraph.checkpoint.sqlite import SqliteSaver
+
+
 load_dotenv()
 SYSTEM_PROMPT = (
     "당신은 법조문과 판례를 근거로 답하는 법률 검색 어시스턴트입니다.\n"
@@ -80,8 +82,18 @@ class State(TypedDict):
 def build_rag_graph():
     vectorstore=build_vectorstore()
     tools=build_tools(vectorstore)
+    raw_llm=build_llm()
     llm=build_llm().bind_tools(tools)
-
+    def summarize_messages(state: State):
+        messages=state["messages"]
+        if len(messages)>20:
+            old_messages=messages[:-10]
+            summary=raw_llm.invoke([
+                SystemMessage(content="다음 대화를 3문장으로 요약해줘"),
+                *old_messages
+            ])
+            return {"messages": [RemoveMessage(id=m.id) for m in old_messages] + [summary]}
+        return {}
     def agent(state: State):
         messages=state["messages"]
         if not any(isinstance(m, SystemMessage) for m in messages):
@@ -89,11 +101,16 @@ def build_rag_graph():
         response=llm.invoke(messages)
         return {"messages":[response]}
     graph_builder=StateGraph(State)
+    graph_builder.add_node("summarize",summarize_messages)
     graph_builder.add_node("agent",agent)
     graph_builder.add_node("tools", ToolNode(tools))
 
-    graph_builder.add_edge(START, "agent")
+    graph_builder.add_edge(START, "summarize")
+    graph_builder.add_edge("summarize", "agent")
     graph_builder.add_conditional_edges("agent", tools_condition)
     graph_builder.add_edge("tools", "agent")
 
-    return graph_builder.compile(checkpointer=MemorySaver())
+
+    conn = sqlite3.connect("checkpoints.db", check_same_thread=False)
+    checkpointer = SqliteSaver(conn)
+    return graph_builder.compile(checkpointer=checkpointer)

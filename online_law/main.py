@@ -72,7 +72,7 @@ def query_stream(req: QueryRequest):
                 config={"configurable":{"thread_id":thread_id}},
                 stream_mode="messages",
             ):
-                if metadata.get("langgraph_node")=="generate":
+                if metadata.get("langgraph_node")=="agent":
                     token=content_to_text(chunk.content)
                     if token:
                         yield sse({"token":token})
